@@ -1,31 +1,18 @@
-import type { IconName } from "../constants/icons";
-
-export interface AlbumItem {
+export interface Album {
   id: string;
-
   name: string;
-
   path: string;
-
-  cover?: string;
-
-  description?: string;
-
-  icon: IconName;
-
+  description: string;
+  cover: string;
+  icon: string;
   photos: number;
 }
 
 export interface AlbumGroup {
   id: string;
-
   title: string;
-
-  description?: string;
-
-  cover?: string;
-
-  icon: IconName;
-
-  items: AlbumItem[];
+  description: string;
+  icon: string;
+  cover: string;
+  items: Album[];
 }

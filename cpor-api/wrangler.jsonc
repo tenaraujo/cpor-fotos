@@ -1,0 +1,62 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  "name": "cpor-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-09",
+
+  "observability": {
+    "enabled": true
+  },
+
+  "upload_source_maps": true,
+
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "CPOR_BUCKET",
+      "bucket_name": "cpor-sp-2012",
+       "remote": true
+    }
+  ]
+
+  /**
+   * Smart Placement
+   * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   */
+  // "placement": {
+  //   "mode": "smart"
+  // }
+
+  /**
+   * Environment Variables
+   */
+  // "vars": {
+  //   "MY_VARIABLE": "production_value"
+  // }
+
+  /**
+   * Static Assets
+   */
+  // "assets": {
+  //   "directory": "./public/",
+  //   "binding": "ASSETS"
+  // }
+
+  /**
+   * Service Bindings
+   */
+  // "services": [
+  //   {
+  //     "binding": "MY_SERVICE",
+  //     "service": "my-service"
+  //   }
+  // ]
+}
