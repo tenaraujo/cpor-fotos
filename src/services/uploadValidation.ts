@@ -2,9 +2,9 @@ const MAX_FILES = 50;
 
 const MAX_SIZE_MB = 15;
 
-const MIN_WIDTH = 1200;
+const MIN_WIDTH = 800;
 
-const MIN_HEIGHT = 800;
+const MIN_HEIGHT = 600;
 
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -44,21 +44,23 @@ export async function validateFiles(
 
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
       throw new Error(
-        `${file.name} excede ${MAX_SIZE_MB} MB.`
+        `${file.name} excede o tamanho máximo de ${MAX_SIZE_MB} MB.`
       );
     }
 
     const image = await loadImage(file);
 
-    if (
-      image.width < MIN_WIDTH ||
-      image.height < MIN_HEIGHT
-    ) {
-      throw new Error(
-        `${file.name} possui resolução muito baixa (${image.width}x${image.height}).`
-      );
+    try {
+      if (
+        image.width < MIN_WIDTH ||
+        image.height < MIN_HEIGHT
+      ) {
+        throw new Error(
+          `${file.name} possui resolução muito baixa (${image.width}×${image.height}). A resolução mínima permitida é ${MIN_WIDTH}×${MIN_HEIGHT}.`
+        );
+      }
+    } finally {
+      URL.revokeObjectURL(image.src);
     }
-
-    URL.revokeObjectURL(image.src);
   }
 }

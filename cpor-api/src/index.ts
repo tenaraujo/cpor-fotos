@@ -79,14 +79,19 @@ export default {
           prefix,
         });
 
-      const photos = objects.objects.map(
-        (object) => ({
+      const photos = objects.objects
+        .filter((object) => {
+          return (
+            object.size > 0 &&
+            !object.key.endsWith("/")
+          );
+        })
+        .map((object) => ({
           key: object.key,
           url: `${PUBLIC_URL}/${object.key}`,
           size: object.size,
           uploaded: object.uploaded,
-        })
-      );
+        }));
 
       return Response.json(photos, {
         headers,

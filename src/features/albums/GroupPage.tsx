@@ -1,17 +1,64 @@
 import { Link, useParams } from "react-router-dom";
 import { ChevronLeft, Images } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { albums } from "./albums";
+
+const API =
+  import.meta.env.VITE_API_URL ??
+  "https://api.cpor2012.com.br";
 
 export default function GroupPage() {
   const { groupId } = useParams();
 
-  const group = albums.find((g) => g.id === groupId);
+  const group = albums.find(
+    (g) => g.id === groupId
+  );
+
+  const [counts, setCounts] = useState<
+    Record<string, number>
+  >({});
+
+  useEffect(() => {
+    if (!group) return;
+
+    const items = group.items;
+
+    async function loadCounts() {
+      const result: Record<string, number> = {};
+
+      await Promise.all(
+        items.map(async (item) => {
+          try {
+            const response = await fetch(
+              `${API}/api/photos?prefix=${encodeURIComponent(
+                item.path
+              )}`
+            );
+
+            const photos = await response.json();
+
+            result[item.id] = Array.isArray(photos)
+              ? photos.length
+              : 0;
+          } catch {
+            result[item.id] = 0;
+          }
+        })
+      );
+
+      setCounts(result);
+    }
+
+    loadCounts();
+  }, [group]);
 
   if (!group) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-16">
-        <h1 className="text-4xl font-bold">Grupo não encontrado</h1>
+        <h1 className="text-4xl font-bold">
+          Grupo não encontrado
+        </h1>
 
         <Link
           to="/"
@@ -26,12 +73,9 @@ export default function GroupPage() {
 
   return (
     <main className="min-h-screen bg-stone-100">
-
       {/* Hero */}
       <section className="bg-[#1f2a1f] py-16 text-white">
-
         <div className="mx-auto max-w-6xl px-6">
-
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300"
@@ -47,35 +91,27 @@ export default function GroupPage() {
           <p className="mt-5 max-w-3xl text-lg text-gray-300">
             {group.description}
           </p>
-
         </div>
-
       </section>
 
       {/* Álbuns */}
       <section className="mx-auto max-w-6xl px-6 py-16">
-
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
           {group.items.map((item) => (
-
             <Link
               key={item.id}
               to={`/albums/${group.id}/${item.id}`}
               className="group rounded-2xl bg-white p-8 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
-
               <div className="flex items-center justify-between">
-
                 <Images
                   size={34}
                   className="text-yellow-600 transition group-hover:scale-110"
                 />
 
                 <span className="rounded-full bg-stone-100 px-3 py-1 text-sm text-gray-600">
-                  {item.photos} fotos
+                  {counts[item.id] ?? 0} fotos
                 </span>
-
               </div>
 
               <h2 className="mt-8 text-3xl font-bold text-[#1f2a1f]">
@@ -87,7 +123,6 @@ export default function GroupPage() {
               </p>
 
               <div className="mt-10 flex items-center justify-between">
-
                 <span className="text-sm text-gray-500">
                   Clique para abrir
                 </span>
@@ -95,17 +130,11 @@ export default function GroupPage() {
                 <span className="font-semibold text-yellow-700 transition group-hover:translate-x-1">
                   Abrir →
                 </span>
-
               </div>
-
             </Link>
-
           ))}
-
         </div>
-
       </section>
-
     </main>
   );
 }
