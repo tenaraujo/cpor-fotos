@@ -139,6 +139,37 @@ export const albums: AlbumGroup[] = [
   },
 
   {
+  id: "aspirantado",
+  title: "Aspirantado",
+  description:
+    "Fotografias da formatura de Aspirante-a-Oficial e do baile de Aspirantado.",
+  icon: "aspirantado",
+  cover: "",
+  items: [
+    {
+      id: "formatura",
+      name: "Formatura",
+      path: "aspirantado/formatura",
+      description:
+        "Fotos da solenidade de formatura de Aspirante-a-Oficial.",
+      cover: "",
+      icon: "album",
+      photos: 0,
+    },
+    {
+      id: "baile",
+      name: "Baile",
+      path: "aspirantado/baile",
+      description:
+        "Fotos do baile de Aspirantado.",
+      cover: "",
+      icon: "album",
+      photos: 0,
+      },
+    ],
+  },
+
+  {
     id: "reencontros",
     title: "Reencontros",
     description:
@@ -147,9 +178,9 @@ export const albums: AlbumGroup[] = [
     cover: "",
     items: [
       {
-        id: "2027",
-        name: "Reencontro 2027",
-        path: "reencontros/2027",
+        id: "2027-15-anos",
+        name: "Reencontro 2027 - 15 anos",
+        path: "reencontros/2027-15-anos",
         description: "Primeiro reencontro oficial da turma.",
         cover: "",
         icon: "album",

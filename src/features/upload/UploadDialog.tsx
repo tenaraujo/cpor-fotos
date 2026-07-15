@@ -31,8 +31,6 @@ export default function UploadDialog({
       setUploading(true);
       setProgress(0);
 
-      // Simulação visual enquanto aguardamos o upload.
-      // Na próxima sprint substituiremos por progresso real.
       const timer = setInterval(() => {
         setProgress((value) => {
           if (value >= 90) return value;
@@ -77,87 +75,98 @@ export default function UploadDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
 
-      <div className="w-full max-w-xl rounded-3xl bg-white p-8 shadow-2xl">
+      <div className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
 
-        <h2 className="text-3xl font-black">
-          Enviar Fotografias
-        </h2>
+        {/* Cabeçalho */}
 
-        <p className="mt-3 text-gray-600">
-          Compartilhe suas lembranças da turma.
-        </p>
+        <div className="border-b p-8">
 
-        {!success && (
-          <>
-            <div className="mt-8">
+          <h2 className="text-3xl font-black">
+            Enviar Fotografias
+          </h2>
 
-              <label className="font-semibold">
-                Senha da turma
-              </label>
+          <p className="mt-3 text-gray-600">
+            Compartilhe suas lembranças da turma.
+          </p>
 
-              <input
-                disabled={uploading}
-                type="password"
-                placeholder="Digite a senha"
-                className="mt-2 w-full rounded-xl border p-3 disabled:bg-gray-100"
-                value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-              />
+        </div>
+
+        {/* Conteúdo */}
+
+        <div className="flex-1 overflow-y-auto p-8">
+
+          {!success && (
+            <>
+              <div>
+
+                <label className="font-semibold">
+                  Senha da turma
+                </label>
+
+                <input
+                  disabled={uploading}
+                  type="password"
+                  placeholder="Digite a senha"
+                  className="mt-2 w-full rounded-xl border p-3 disabled:bg-gray-100"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
+                />
+
+              </div>
+
+              <div
+                className={`mt-8 ${
+                  uploading
+                    ? "pointer-events-none opacity-60"
+                    : ""
+                }`}
+              >
+
+                <Dropzone
+                  files={files}
+                  setFiles={setFiles}
+                />
+
+              </div>
+            </>
+          )}
+
+          {uploading && (
+            <UploadProgress
+              progress={progress}
+            />
+          )}
+
+          {success && (
+            <div className="rounded-2xl bg-green-50 p-8 text-center">
+
+              <h3 className="text-2xl font-bold text-green-700">
+                ✅ Upload concluído!
+              </h3>
+
+              <p className="mt-3 text-green-600">
+                {files.length} fotografia(s)
+                enviada(s) com sucesso.
+              </p>
 
             </div>
+          )}
 
-            <div
-              className={`mt-8 ${
-                uploading
-                  ? "pointer-events-none opacity-60"
-                  : ""
-              }`}
-            >
+        </div>
 
-              <Dropzone
-                files={files}
-                setFiles={setFiles}
-              />
-
-            </div>
-          </>
-        )}
-
-        {uploading && (
-
-          <UploadProgress
-            progress={progress}
-          />
-
-        )}
-
-        {success && (
-
-          <div className="mt-10 rounded-2xl bg-green-50 p-8 text-center">
-
-            <h3 className="text-2xl font-bold text-green-700">
-              ✅ Upload concluído!
-            </h3>
-
-            <p className="mt-3 text-green-600">
-              {files.length} fotografia(s) enviada(s)
-              com sucesso.
-            </p>
-
-          </div>
-
-        )}
+        {/* Rodapé */}
 
         {!success && (
 
-          <div className="mt-8 flex items-center justify-between">
+          <div className="flex items-center justify-between border-t bg-white p-6">
 
             <span className="text-sm text-gray-500">
-              {files.length} fotografia(s) selecionada(s)
+              {files.length} fotografia(s)
+              selecionada(s)
             </span>
 
             <div className="flex gap-3">
@@ -181,7 +190,7 @@ export default function UploadDialog({
               >
                 {uploading
                   ? "Enviando..."
-                  : `Enviar ${files.length || ""} fotografia(s)`}
+                  : `Enviar ${files.length} fotografia(s)`}
               </button>
 
             </div>
